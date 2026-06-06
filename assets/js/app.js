@@ -53,6 +53,7 @@
         const navbar = $('#navbar');
         const hamburger = $('#navHamburger');
         const menu = $('#navMenu');
+        const backdrop = $('#navBackdrop');
         const links = $$('.nav__link');
 
         const onScroll = () => {
@@ -61,16 +62,23 @@
         window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
 
-        hamburger && hamburger.addEventListener('click', () => {
-            const open = menu.classList.toggle('is-open');
-            hamburger.classList.toggle('is-open', open);
-            hamburger.setAttribute('aria-expanded', String(open));
-        });
+        function setMenu(open) {
+            if (!menu) return;
+            menu.classList.toggle('is-open', open);
+            hamburger && hamburger.classList.toggle('is-open', open);
+            backdrop && backdrop.classList.toggle('is-open', open);
+            hamburger && hamburger.setAttribute('aria-expanded', String(open));
+            document.body.classList.toggle('nav-open', open);
+        }
+        const closeMenu = () => setMenu(false);
 
-        links.forEach(link => link.addEventListener('click', () => {
-            menu && menu.classList.remove('is-open');
-            hamburger && hamburger.classList.remove('is-open');
-        }));
+        hamburger && hamburger.addEventListener('click', () => {
+            setMenu(!menu.classList.contains('is-open'));
+        });
+        backdrop && backdrop.addEventListener('click', closeMenu);
+        links.forEach(link => link.addEventListener('click', closeMenu));
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+        window.addEventListener('resize', () => { if (window.innerWidth > 880) closeMenu(); });
 
         // Scrollspy
         const sections = $$('main section[id]');
@@ -101,7 +109,7 @@
         const btn = $('#backToTop');
         if (!btn) return;
         window.addEventListener('scroll', () => {
-            btn.classList.toggle('is-visible', window.scrollY > 600);
+            btn.classList.toggle('is-visible', window.scrollY > 400);
         }, { passive: true });
         btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     }
