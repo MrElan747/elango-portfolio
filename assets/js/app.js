@@ -118,7 +118,7 @@
     function initTyping() {
         const el = $('#typed');
         if (!el) return;
-        const words = ['high-performance APIs', '.NET Core 8 systems', 'Angular SPAs', 'scalable backends', 'IoT solutions'];
+        const words = ['cloud-native backends', 'ASP.NET Core APIs', 'Azure Functions', 'event-driven systems', 'Angular apps'];
         if (prefersReduced) { el.textContent = words[0]; return; }
 
         let wi = 0, ci = 0, deleting = false;
