@@ -1,62 +1,42 @@
 <!DOCTYPE html>
-<!-- Portfolio V3 of Elango Palaniyappan — Motorized & Animated -->
-<html lang="en" data-theme="dark">
+<!-- Portfolio V5 of Elango Palaniyappan — Bento Minimal -->
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Elango Palaniyappan — Software Engineer 2 specializing in C#, ASP.NET Core, Azure and Angular. Building backend and cloud-native applications with a focus on performance and event-driven architectures." />
     <meta name="author" content="Elango Palaniyappan" />
-    <meta name="theme-color" content="#0a0a14" />
+    <meta name="theme-color" content="#f3f2ee" />
     <title>Elango Palaniyappan — Software Engineer | .NET · Azure · Angular</title>
+
+    <script>
+        // Apply the saved (or system) theme before first paint to avoid a flash
+        (function () {
+            try {
+                var t = localStorage.getItem('ep-bento-theme');
+                if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', t);
+            } catch (e) { }
+        })();
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
     <link rel="stylesheet" href="./assets/css/style.css" />
 </head>
 <body>
-    <!-- ========================= PRELOADER ========================= -->
-    <div class="preloader" id="preloader">
-        <div class="preloader__content">
-            <div class="preloader__logo">
-                <span>E</span><span>P</span>
-            </div>
-            <div class="preloader__bar"><span class="preloader__bar-fill" id="preloaderFill"></span></div>
-            <div class="preloader__percent" id="preloaderPercent">0%</div>
-        </div>
-    </div>
-
-    <!-- ========================= CUSTOM CURSOR ========================= -->
-    <div class="cursor" id="cursorDot"></div>
-    <div class="cursor-ring" id="cursorRing"></div>
-
-    <!-- ========================= SCROLL PROGRESS ========================= -->
-    <div class="scroll-progress" id="scrollProgress"></div>
-
-    <!-- ========================= ANIMATED BACKGROUND ========================= -->
-    <canvas class="bg-canvas" id="bgCanvas"></canvas>
-    <div class="bg-grid" aria-hidden="true"></div>
-    <div class="bg-glow bg-glow--1" aria-hidden="true"></div>
-    <div class="bg-glow bg-glow--2" aria-hidden="true"></div>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 
     <!-- ========================= NAVBAR ========================= -->
     <header class="navbar" id="navbar">
         <nav class="nav container">
             <a href="#hero" class="nav__logo" aria-label="Home">
-                <span class="nav__logo-mark">EP</span>
+                <span class="nav__logo-mark">ep</span>
+                <span class="nav__logo-text">Elango P.</span>
             </a>
-
-            <div class="nav__actions">
-                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-                    <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                    <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line></svg>
-                </button>
-
-                <button class="nav__hamburger" id="navHamburger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navMenu">
-                    <span></span><span></span><span></span>
-                </button>
-            </div>
 
             <ul class="nav__menu" id="navMenu">
                 <li><a href="#hero" class="nav__link is-active">Home</a></li>
@@ -67,109 +47,115 @@
                 <li><a href="#education" class="nav__link">Education</a></li>
                 <li><a href="#contact" class="nav__link">Contact</a></li>
             </ul>
+
+            <div class="nav__actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line></svg>
+                </button>
+                <button class="nav__hamburger" id="navHamburger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navMenu">
+                    <span></span><span></span>
+                </button>
+            </div>
         </nav>
     </header>
-
     <div class="nav__backdrop" id="navBackdrop" aria-hidden="true"></div>
 
-    <main>
-        <!-- ========================= HERO ========================= -->
+    <main id="main">
+        <!-- ========================= HERO BENTO ========================= -->
         <section class="hero" id="hero">
-            <div class="container hero__inner">
-                <div class="hero__content">
-                    <p class="hero__greeting reveal" data-reveal>
-                        <span class="hero__wave">👋</span> Hello, I'm
-                    </p>
-                    <h1 class="hero__name reveal" data-reveal>
-                        <span class="hero__name-line">Elango</span>
-                        <span class="hero__name-line hero__name-line--accent">Palaniyappan</span>
+            <div class="container bento bento--hero">
+                <article class="tile tile--intro" data-reveal>
+                    <span class="eyebrow"><span class="live-dot"></span> Software Engineer 2 @ Danaher · Radiometer</span>
+                    <h1 class="hero__title" aria-label="Elango Palaniyappan">
+                        <span class="line" aria-hidden="true"><span class="word">Elango</span></span>
+                        <span class="line" aria-hidden="true"><span class="word">Palaniyappan<span class="accent-dot">.</span></span></span>
                     </h1>
-                    <h2 class="hero__role reveal" data-reveal>
-                        <span class="hero__role-static">I build</span>
-                        <span class="hero__typed" id="typed"></span><span class="hero__caret">|</span>
-                    </h2>
-                    <p class="hero__desc reveal" data-reveal>
-                        Software Engineer 2 with <strong>4 years</strong> of experience building backend and
-                        cloud-native applications with <strong>C#</strong>, <strong>ASP.NET Core</strong>,
-                        <strong>Azure</strong> &amp; <strong>Angular</strong> — currently at
-                        <strong>Danaher (Radiometer)</strong>.
+                    <p class="hero__role">
+                        I build
+                        <span class="rotator" id="rotator" aria-live="polite"><span class="rotator__word">cloud-native backends</span></span>
                     </p>
-
-                    <div class="hero__cta reveal" data-reveal>
+                    <p class="hero__desc">
+                        Software Engineer with <strong>4 years</strong> of experience building backend and cloud-native
+                        applications using <strong>C#</strong>, <strong>ASP.NET Core</strong>, <strong>Azure</strong>,
+                        <strong>SQL</strong> and <strong>Angular</strong>.
+                    </p>
+                    <div class="hero__cta">
                         <a href="#projects" class="btn btn--primary">
-                            <span>View My Work</span>
-                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            View my work
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                         </a>
-                        <a href="#contact" class="btn btn--ghost">Get In Touch</a>
+                        <a href="#contact" class="btn btn--ghost">Get in touch</a>
                     </div>
+                </article>
 
-                    <ul class="hero__socials reveal" data-reveal>
-                        <li><a href="mailto:elango.p747@gmail.com" aria-label="Email" class="social-link">
-                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                        </a></li>
-                        <li><a href="https://linkedin.com/in/elango747" target="_blank" rel="noopener" aria-label="LinkedIn" class="social-link">
-                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-                        </a></li>
-                        <li><a href="tel:+916380325481" aria-label="Phone" class="social-link">
-                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                        </a></li>
-                    </ul>
-                </div>
+                <article class="tile tile--photo" data-reveal>
+                    <img src="./assets/img/elango-profile.jpg" alt="Elango Palaniyappan" class="tile--photo__img" loading="eager" />
+                    <span class="tile--photo__tag">📍 Bangalore, India</span>
+                </article>
 
-                <div class="hero__visual reveal" data-reveal>
-                    <div class="hero__orb">
-                        <div class="hero__ring hero__ring--1"></div>
-                        <div class="hero__ring hero__ring--2"></div>
-                        <div class="hero__ring hero__ring--3"></div>
-                        <div class="hero__avatar">
-                            <img src="./assets/img/elango-profile.jpg" alt="Elango Palaniyappan" class="hero__avatar-img" loading="eager" />
+                <article class="tile tile--stat tile--accent" data-reveal>
+                    <span class="tile__label">Experience</span>
+                    <span class="tile__num"><span data-count="4" data-suffix="+">0</span></span>
+                    <span class="tile__caption">Years building backend &amp; cloud apps</span>
+                </article>
+
+                <article class="tile tile--stat" data-reveal>
+                    <span class="tile__label">Scale</span>
+                    <span class="tile__num"><span data-count="400" data-suffix="K+">0</span></span>
+                    <span class="tile__caption">Records processed by an optimized task scheduler</span>
+                </article>
+
+                <article class="tile tile--speed" data-reveal>
+                    <span class="tile__label">API response time</span>
+                    <div class="speed">
+                        <div class="speed__row">
+                            <span class="speed__name">Before</span>
+                            <span class="speed__bar"><span class="speed__fill speed__fill--before"></span></span>
+                            <span class="speed__val">4–6s</span>
                         </div>
-                        <div class="hero__chip hero__chip--1">.NET 10</div>
-                        <div class="hero__chip hero__chip--2">Azure</div>
-                        <div class="hero__chip hero__chip--3">C#</div>
-                        <div class="hero__chip hero__chip--4">Angular</div>
+                        <div class="speed__row">
+                            <span class="speed__name">After</span>
+                            <span class="speed__bar"><span class="speed__fill speed__fill--after"></span></span>
+                            <span class="speed__val speed__val--accent">&lt;1s</span>
+                        </div>
                     </div>
-                </div>
-            </div>
+                    <span class="tile__caption">.NET Framework → ASP.NET Core 8 migration</span>
+                </article>
 
-            <a href="#about" class="hero__scroll" aria-label="Scroll down">
-                <span class="hero__scroll-mouse"><span class="hero__scroll-wheel"></span></span>
-                <span class="hero__scroll-text">Scroll</span>
-            </a>
-        </section>
+                <article class="tile tile--clock" data-reveal>
+                    <span class="tile__label">Local time</span>
+                    <span class="clock" id="clock">--:--</span>
+                    <span class="tile__caption">Bangalore · IST (UTC+5:30)</span>
+                </article>
 
-        <!-- ========================= STATS ========================= -->
-        <section class="stats">
-            <div class="container stats__grid">
-                <div class="stat-card reveal" data-reveal>
-                    <span class="stat-card__num" data-count="4" data-suffix="+">0</span>
-                    <span class="stat-card__label">Years Experience</span>
-                </div>
-                <div class="stat-card reveal" data-reveal>
-                    <span class="stat-card__num" data-count="400" data-suffix="K+">0</span>
-                    <span class="stat-card__label">Records Processed</span>
-                </div>
-                <div class="stat-card reveal" data-reveal>
-                    <span class="stat-card__num" data-count="6" data-suffix="x">0</span>
-                    <span class="stat-card__label">Faster APIs (6s → &lt;1s)</span>
-                </div>
-                <div class="stat-card reveal" data-reveal>
-                    <span class="stat-card__num" data-count="2" data-suffix="">0</span>
-                    <span class="stat-card__label">Excellence Awards</span>
-                </div>
+                <article class="tile tile--stack" data-reveal>
+                    <span class="tile__label">Daily stack</span>
+                    <div class="marquee">
+                        <div class="marquee__track">
+                            <span>C#</span><span>.NET 10</span><span>ASP.NET Core</span><span>EF Core</span><span>Azure Functions</span><span>Service Bus</span><span>Blob Storage</span><span>Azure OpenAI</span>
+                        </div>
+                    </div>
+                    <div class="marquee marquee--reverse">
+                        <div class="marquee__track">
+                            <span>Angular</span><span>TypeScript</span><span>PrimeNG</span><span>SQL Server</span><span>PostgreSQL</span><span>Docker</span><span>SonarQube</span><span>GitHub Copilot</span>
+                        </div>
+                    </div>
+                </article>
             </div>
         </section>
 
         <!-- ========================= ABOUT ========================= -->
-        <section class="section about" id="about">
+        <section class="section" id="about">
             <div class="container">
-                <header class="section__head reveal" data-reveal>
-                    <span class="section__tag">01 — About</span>
-                    <h2 class="section__title">Who I Am</h2>
+                <header class="section__head" data-reveal>
+                    <span class="section__num">01</span>
+                    <h2 class="section__title">About</h2>
+                    <p class="section__sub">Backend &amp; cloud-native engineer focused on performance and event-driven design.</p>
                 </header>
 
-                <div class="about__grid">
-                    <div class="about__text reveal" data-reveal>
+                <div class="bento bento--about">
+                    <article class="tile tile--bio" data-reveal>
                         <p>
                             I'm a <strong>Software Engineer</strong> with 4 years of experience building backend and
                             cloud-native applications using <strong>C#</strong>, <strong>ASP.NET Core</strong>,
@@ -183,27 +169,17 @@
                         <p>
                             Currently a <strong>Software Engineer 2 at Danaher (Radiometer)</strong>, I work on AQURE,
                             lead .NET 10 migrations of Azure Functions and drive code quality with SonarQube &amp; Mend.
-                            I'm a recipient of the <strong>Radiometer Spotlight Award</strong> and the
-                            <strong>UST UStar Super Star Award</strong>.
                         </p>
+                    </article>
 
-                        <ul class="about__facts">
-                            <li><span>📍</span> Bangalore</li>
-                            <li><span>✉️</span> elango.p747@gmail.com</li>
-                            <li><span>📞</span> +91 63803 25481</li>
-                            <li><span>🎓</span> MCA — Anna University</li>
-                        </ul>
-                    </div>
-
-                    <div class="about__panel reveal" data-reveal>
-                        <div class="code-card">
-                            <div class="code-card__bar">
-                                <span class="code-card__dot"></span>
-                                <span class="code-card__dot"></span>
-                                <span class="code-card__dot"></span>
-                                <span class="code-card__file">developer.cs</span>
-                            </div>
-                            <pre class="code-card__body"><code><span class="tok-key">public class</span> <span class="tok-cls">Developer</span>
+                    <article class="tile tile--code" data-reveal>
+                        <div class="code-card__bar">
+                            <span class="code-card__dot"></span>
+                            <span class="code-card__dot"></span>
+                            <span class="code-card__dot"></span>
+                            <span class="code-card__file">developer.cs</span>
+                        </div>
+                        <pre class="code-card__body"><code><span class="tok-key">public class</span> <span class="tok-cls">Developer</span>
 {
     <span class="tok-key">string</span> Name = <span class="tok-str">"Elango Palaniyappan"</span>;
     <span class="tok-key">string</span> Role = <span class="tok-str">"Software Engineer 2"</span>;
@@ -215,23 +191,35 @@
 
     <span class="tok-key">bool</span> ShipsQuality() => <span class="tok-key">true</span>;
 }</code></pre>
-                        </div>
-                    </div>
+                    </article>
+
+                    <article class="tile tile--fact" data-reveal>
+                        <span class="tile__icon tint-1">🛰️</span>
+                        <span class="tile__label">Currently</span>
+                        <p class="tile__text">AQURE @ Radiometer — Software Engineer 2 since Feb 2026</p>
+                    </article>
+
+                    <article class="tile tile--fact" data-reveal>
+                        <span class="tile__icon tint-2">🎯</span>
+                        <span class="tile__label">Focus</span>
+                        <p class="tile__text">API modernization · Performance · Event-driven architecture</p>
+                    </article>
                 </div>
             </div>
         </section>
 
         <!-- ========================= SKILLS ========================= -->
-        <section class="section skills" id="skills">
+        <section class="section" id="skills">
             <div class="container">
-                <header class="section__head reveal" data-reveal>
-                    <span class="section__tag">02 — Skills</span>
-                    <h2 class="section__title">Tech Arsenal</h2>
+                <header class="section__head" data-reveal>
+                    <span class="section__num">02</span>
+                    <h2 class="section__title">Skills</h2>
+                    <p class="section__sub">The tools I reach for to ship reliable, fast software.</p>
                 </header>
 
-                <div class="skills__grid">
-                    <article class="skill-cat reveal" data-reveal>
-                        <h3 class="skill-cat__title"><span class="skill-cat__icon">⚙️</span> Backend</h3>
+                <div class="bento bento--skills">
+                    <article class="tile skill skill--backend" data-reveal>
+                        <div class="skill__head"><span class="tile__icon tint-1">⚙️</span><h3 class="skill__title">Backend</h3></div>
                         <div class="chips">
                             <span class="chip">C#</span>
                             <span class="chip">.NET 8 / 10</span>
@@ -244,8 +232,8 @@
                         </div>
                     </article>
 
-                    <article class="skill-cat reveal" data-reveal>
-                        <h3 class="skill-cat__title"><span class="skill-cat__icon">☁️</span> Azure</h3>
+                    <article class="tile skill skill--azure" data-reveal>
+                        <div class="skill__head"><span class="tile__icon tint-3">☁️</span><h3 class="skill__title">Azure</h3></div>
                         <div class="chips">
                             <span class="chip">Azure Functions</span>
                             <span class="chip">Azure Service Bus</span>
@@ -255,8 +243,8 @@
                         </div>
                     </article>
 
-                    <article class="skill-cat reveal" data-reveal>
-                        <h3 class="skill-cat__title"><span class="skill-cat__icon">💻</span> Frontend</h3>
+                    <article class="tile skill skill--frontend" data-reveal>
+                        <div class="skill__head"><span class="tile__icon tint-5">💻</span><h3 class="skill__title">Frontend</h3></div>
                         <div class="chips">
                             <span class="chip">Angular 14–18</span>
                             <span class="chip">TypeScript</span>
@@ -265,8 +253,8 @@
                         </div>
                     </article>
 
-                    <article class="skill-cat reveal" data-reveal>
-                        <h3 class="skill-cat__title"><span class="skill-cat__icon">🧰</span> Tools &amp; DevOps</h3>
+                    <article class="tile skill skill--tools" data-reveal>
+                        <div class="skill__head"><span class="tile__icon tint-4">🧰</span><h3 class="skill__title">Tools &amp; DevOps</h3></div>
                         <div class="chips">
                             <span class="chip">Git</span>
                             <span class="chip">Docker</span>
@@ -279,19 +267,8 @@
                         </div>
                     </article>
 
-                    <article class="skill-cat reveal" data-reveal>
-                        <h3 class="skill-cat__title"><span class="skill-cat__icon">🗄️</span> Databases</h3>
-                        <div class="chips">
-                            <span class="chip">SQL Server</span>
-                            <span class="chip">PostgreSQL</span>
-                            <span class="chip">Stored Procedures</span>
-                            <span class="chip">Query Optimization</span>
-                            <span class="chip">Indexing</span>
-                        </div>
-                    </article>
-
-                    <article class="skill-cat reveal" data-reveal>
-                        <h3 class="skill-cat__title"><span class="skill-cat__icon">🚀</span> Specialties</h3>
+                    <article class="tile skill skill--specialties" data-reveal>
+                        <div class="skill__head"><span class="tile__icon tint-6">🚀</span><h3 class="skill__title">Specialties</h3></div>
                         <div class="chips">
                             <span class="chip">API Modernization</span>
                             <span class="chip">Performance Optimization</span>
@@ -300,124 +277,168 @@
                             <span class="chip">CI/CD Quality Gates</span>
                         </div>
                     </article>
+
+                    <article class="tile skill skill--db" data-reveal>
+                        <div class="skill__head"><span class="tile__icon tint-2">🗄️</span><h3 class="skill__title">Databases</h3></div>
+                        <div class="chips">
+                            <span class="chip">SQL Server</span>
+                            <span class="chip">PostgreSQL</span>
+                            <span class="chip">Stored Procedures</span>
+                            <span class="chip">Query Optimization</span>
+                            <span class="chip">Indexing</span>
+                        </div>
+                    </article>
                 </div>
             </div>
         </section>
 
         <!-- ========================= EXPERIENCE ========================= -->
-        <section class="section experience" id="experience">
+        <section class="section" id="experience">
             <div class="container">
-                <header class="section__head reveal" data-reveal>
-                    <span class="section__tag">03 — Experience</span>
-                    <h2 class="section__title">Career Journey</h2>
+                <header class="section__head" data-reveal>
+                    <span class="section__num">03</span>
+                    <h2 class="section__title">Experience</h2>
+                    <p class="section__sub">Where I've been building — tap a role to expand.</p>
                 </header>
 
-                <div class="timeline">
-                    <div class="timeline__item reveal" data-reveal>
-                        <span class="timeline__dot"></span>
-                        <div class="timeline__card">
-                            <span class="timeline__date">Feb 2026 – Present</span>
-                            <h3 class="timeline__role">Software Engineer 2</h3>
-                            <p class="timeline__org">Danaher Corporation — Radiometer, Bangalore</p>
-                            <ul class="timeline__points">
-                                <li>Delivered backend change requests and defect fixes for <strong>AQURE</strong>, improving product functionality and reliability.</li>
-                                <li>Led Azure Functions migration from <strong>.NET 8 to .NET 10</strong>, including automated unit-test development and validation using GitHub Copilot.</li>
-                                <li>Integrated <strong>Mend</strong> and <strong>SonarQube</strong> into CI/CD pipelines for automated dependency security and code-quality analysis.</li>
-                                <li>Built a configurable <strong>SOUP evaluation tool</strong> for Git repositories and NuGet dependencies, reducing manual effort by 25%.</li>
-                            </ul>
+                <div class="exp">
+                    <article class="tile exp__item is-open" data-reveal>
+                        <button class="exp__head" aria-expanded="true" aria-controls="exp-1">
+                            <span class="exp__date">Feb 2026 — Present</span>
+                            <span class="exp__main">
+                                <span class="exp__role">Software Engineer 2</span>
+                                <span class="exp__org">Danaher Corporation — Radiometer · Bangalore</span>
+                            </span>
+                            <span class="exp__icon" aria-hidden="true"></span>
+                        </button>
+                        <div class="exp__body" id="exp-1">
+                            <div class="exp__inner">
+                                <ul class="exp__points">
+                                    <li>Delivered backend change requests and defect fixes for <strong>AQURE</strong>, improving product functionality and reliability.</li>
+                                    <li>Led Azure Functions migration from <strong>.NET 8 to .NET 10</strong>, including automated unit-test development and validation using GitHub Copilot.</li>
+                                    <li>Integrated <strong>Mend</strong> and <strong>SonarQube</strong> into CI/CD pipelines for automated dependency security and code-quality analysis.</li>
+                                    <li>Built a configurable <strong>SOUP evaluation tool</strong> for Git repositories and NuGet dependencies, reducing manual effort by 25%.</li>
+                                </ul>
+                                <div class="tags"><span>.NET 10</span><span>Azure Functions</span><span>SonarQube</span><span>Mend</span><span>GitHub Copilot</span></div>
+                            </div>
                         </div>
-                    </div>
+                    </article>
 
-                    <div class="timeline__item reveal" data-reveal>
-                        <span class="timeline__dot"></span>
-                        <div class="timeline__card">
-                            <span class="timeline__date">Nov 2023 – Feb 2026</span>
-                            <h3 class="timeline__role">Associate Software Engineer</h3>
-                            <p class="timeline__org">UST — Client: Intel, Bangalore</p>
-                            <ul class="timeline__points">
-                                <li>Led migration of legacy .NET Framework services to <strong>ASP.NET Core 8</strong>, reducing API response time from 4–6s to &lt;1s through async programming, SQL optimization and caching.</li>
-                                <li>Optimized a task scheduler processing <strong>400K+ records</strong> using Parallel.ForEach and Task.WhenAll for efficient parallel execution.</li>
-                                <li>Developed reflection-based dynamic execution with background processing for scalable workloads.</li>
-                                <li>Built automated PowerPoint reporting using OpenXML with scheduled execution, email notifications and audit logging.</li>
-                                <li>Developed reusable Angular/PrimeNG components, reducing feature development effort by 25%.</li>
-                            </ul>
+                    <article class="tile exp__item" data-reveal>
+                        <button class="exp__head" aria-expanded="false" aria-controls="exp-2">
+                            <span class="exp__date">Nov 2023 — Feb 2026</span>
+                            <span class="exp__main">
+                                <span class="exp__role">Associate Software Engineer</span>
+                                <span class="exp__org">UST — Client: Intel · Bangalore</span>
+                            </span>
+                            <span class="exp__icon" aria-hidden="true"></span>
+                        </button>
+                        <div class="exp__body" id="exp-2">
+                            <div class="exp__inner">
+                                <ul class="exp__points">
+                                    <li>Led migration of legacy .NET Framework services to <strong>ASP.NET Core 8</strong>, reducing API response time from 4–6s to &lt;1s through async programming, SQL optimization and caching.</li>
+                                    <li>Optimized a task scheduler processing <strong>400K+ records</strong> using Parallel.ForEach and Task.WhenAll for efficient parallel execution.</li>
+                                    <li>Developed reflection-based dynamic execution with background processing for scalable workloads.</li>
+                                    <li>Built automated PowerPoint reporting using OpenXML with scheduled execution, email notifications and audit logging.</li>
+                                    <li>Developed reusable Angular/PrimeNG components, reducing feature development effort by 25%.</li>
+                                </ul>
+                                <div class="tags"><span>ASP.NET Core 8</span><span>SQL Server</span><span>Parallel Processing</span><span>OpenXML</span><span>Angular</span><span>PrimeNG</span></div>
+                            </div>
                         </div>
-                    </div>
+                    </article>
 
-                    <div class="timeline__item reveal" data-reveal>
-                        <span class="timeline__dot"></span>
-                        <div class="timeline__card">
-                            <span class="timeline__date">Nov 2022 – Oct 2023</span>
-                            <h3 class="timeline__role">Junior Software Engineer</h3>
-                            <p class="timeline__org">RADAZ Technologies, Coimbatore</p>
-                            <ul class="timeline__points">
-                                <li>Developed Purchase and Inventory ERP modules using ASP.NET Core, Angular and SQL Server.</li>
-                                <li>Built reusable APIs and Angular components, reducing feature development effort by 20%.</li>
-                            </ul>
+                    <article class="tile exp__item" data-reveal>
+                        <button class="exp__head" aria-expanded="false" aria-controls="exp-3">
+                            <span class="exp__date">Nov 2022 — Oct 2023</span>
+                            <span class="exp__main">
+                                <span class="exp__role">Junior Software Engineer</span>
+                                <span class="exp__org">RADAZ Technologies · Coimbatore</span>
+                            </span>
+                            <span class="exp__icon" aria-hidden="true"></span>
+                        </button>
+                        <div class="exp__body" id="exp-3">
+                            <div class="exp__inner">
+                                <ul class="exp__points">
+                                    <li>Developed Purchase and Inventory ERP modules using ASP.NET Core, Angular and SQL Server.</li>
+                                    <li>Built reusable APIs and Angular components, reducing feature development effort by 20%.</li>
+                                </ul>
+                                <div class="tags"><span>ASP.NET Core</span><span>Angular</span><span>SQL Server</span></div>
+                            </div>
                         </div>
-                    </div>
+                    </article>
                 </div>
             </div>
         </section>
 
         <!-- ========================= PROJECTS ========================= -->
-        <section class="section projects" id="projects">
+        <section class="section" id="projects">
             <div class="container">
-                <header class="section__head reveal" data-reveal>
-                    <span class="section__tag">04 — Projects</span>
-                    <h2 class="section__title">Featured Work</h2>
+                <header class="section__head" data-reveal>
+                    <span class="section__num">04</span>
+                    <h2 class="section__title">Projects</h2>
+                    <p class="section__sub">Selected work across cloud, modernization and automation.</p>
                 </header>
 
-                <div class="projects__grid">
-                    <article class="project-card reveal" data-reveal data-tilt>
-                        <div class="project-card__glow"></div>
-                        <div class="project-card__icon">☁️</div>
-                        <h3 class="project-card__title">Cloud Document Processing Platform</h3>
-                        <p class="project-card__desc">
-                            Event-driven document processing platform with AI-powered extraction, retry/DLQ handling,
-                            Managed Identity and Key Vault. <em>Personal project.</em>
-                        </p>
-                        <div class="project-card__tags">
-                            <span>ASP.NET Core</span><span>Azure Functions</span><span>Service Bus</span><span>Blob Storage</span><span>Azure SQL</span><span>Azure OpenAI</span>
+                <div class="bento bento--projects">
+                    <article class="tile project project--feature" data-reveal>
+                        <div class="project__top">
+                            <span class="project__kicker">Personal project · Azure + AI</span>
+                            <span class="project__index">01</span>
                         </div>
+                        <h3 class="project__title">Cloud Document Processing Platform</h3>
+                        <p class="project__desc">
+                            Event-driven document processing platform with AI-powered document extraction,
+                            retry/DLQ handling, Managed Identity and Key Vault.
+                        </p>
+                        <div class="pipeline" aria-hidden="true">
+                            <span class="pipeline__node">Blob Storage</span>
+                            <span class="pipeline__link"></span>
+                            <span class="pipeline__node">Service Bus</span>
+                            <span class="pipeline__link"></span>
+                            <span class="pipeline__node">Functions</span>
+                            <span class="pipeline__link"></span>
+                            <span class="pipeline__node">Azure OpenAI</span>
+                            <span class="pipeline__link"></span>
+                            <span class="pipeline__node">Azure SQL</span>
+                        </div>
+                        <div class="tags"><span>ASP.NET Core</span><span>Azure Functions</span><span>Service Bus</span><span>Blob Storage</span><span>Azure SQL</span><span>Azure OpenAI</span><span>Key Vault</span></div>
                     </article>
 
-                    <article class="project-card reveal" data-reveal data-tilt>
-                        <div class="project-card__glow"></div>
-                        <div class="project-card__icon">🔧</div>
-                        <h3 class="project-card__title">Legacy API Modernization</h3>
-                        <p class="project-card__desc">
-                            Migrated legacy .NET Framework services to ASP.NET Core 8, cutting API response time
-                            from 4–6 seconds to under 1 second.
-                        </p>
-                        <div class="project-card__tags">
-                            <span>ASP.NET Core 8</span><span>Async</span><span>SQL Optimization</span><span>Caching</span>
+                    <article class="tile project" data-reveal>
+                        <div class="project__top">
+                            <span class="project__kicker">UST · Client: Intel</span>
+                            <span class="project__index">02</span>
                         </div>
+                        <h3 class="project__title">Legacy API Modernization</h3>
+                        <p class="project__desc">Migrated legacy .NET Framework services to ASP.NET Core 8, cutting API response time from 4–6 seconds to under 1 second.</p>
+                        <div class="tags"><span>ASP.NET Core 8</span><span>Async</span><span>SQL Optimization</span><span>Caching</span></div>
                     </article>
 
-                    <article class="project-card reveal" data-reveal data-tilt>
-                        <div class="project-card__glow"></div>
-                        <div class="project-card__icon">📊</div>
-                        <h3 class="project-card__title">Enterprise Reporting &amp; Automation</h3>
-                        <p class="project-card__desc">
-                            Automated PowerPoint report generation with scheduled execution, email notifications
-                            and audit logging.
-                        </p>
-                        <div class="project-card__tags">
-                            <span>.NET Core</span><span>OpenXML</span><span>Scheduling</span><span>NLog</span>
+                    <article class="tile project" data-reveal>
+                        <div class="project__top">
+                            <span class="project__kicker">UST</span>
+                            <span class="project__index">03</span>
                         </div>
+                        <h3 class="project__title">Enterprise Reporting &amp; Automation</h3>
+                        <p class="project__desc">Automated PowerPoint report generation with scheduled execution, email notifications and audit logging.</p>
+                        <div class="tags"><span>.NET Core</span><span>OpenXML</span><span>Scheduling</span><span>NLog</span></div>
                     </article>
 
-                    <article class="project-card reveal" data-reveal data-tilt>
-                        <div class="project-card__glow"></div>
-                        <div class="project-card__icon">🛡️</div>
-                        <h3 class="project-card__title">SOUP Evaluation Tool</h3>
-                        <p class="project-card__desc">
-                            Configurable tool that evaluates Git repositories and NuGet dependencies for SOUP
-                            compliance, reducing manual effort by 25%.
-                        </p>
-                        <div class="project-card__tags">
-                            <span>C#</span><span>NuGet</span><span>Git</span><span>Compliance</span>
+                    <article class="tile project project--wide" data-reveal>
+                        <div class="project__top">
+                            <span class="project__kicker">Danaher · Radiometer</span>
+                            <span class="project__index">04</span>
+                        </div>
+                        <div class="project--wide__body">
+                            <div>
+                                <h3 class="project__title">SOUP Evaluation Tool</h3>
+                                <p class="project__desc">Configurable tool that evaluates Git repositories and NuGet dependencies for SOUP compliance.</p>
+                                <div class="tags"><span>C#</span><span>NuGet</span><span>Git</span><span>Compliance</span></div>
+                            </div>
+                            <div class="project__metric">
+                                <span class="project__metric-num"><span data-count="25" data-suffix="%">0</span></span>
+                                <span class="project__metric-label">less manual effort</span>
+                            </div>
                         </div>
                     </article>
                 </div>
@@ -425,84 +446,72 @@
         </section>
 
         <!-- ========================= EDUCATION & AWARDS ========================= -->
-        <section class="section education" id="education">
+        <section class="section" id="education">
             <div class="container">
-                <header class="section__head reveal" data-reveal>
-                    <span class="section__tag">05 — Education &amp; Awards</span>
-                    <h2 class="section__title">Credentials</h2>
+                <header class="section__head" data-reveal>
+                    <span class="section__num">05</span>
+                    <h2 class="section__title">Education &amp; Awards</h2>
+                    <p class="section__sub">Foundations and recognition along the way.</p>
                 </header>
 
-                <div class="education__grid">
-                    <div class="edu-col reveal" data-reveal>
-                        <h3 class="edu-col__heading">🎓 Education</h3>
-                        <div class="edu-card">
-                            <h4>MCA — Master of Computer Applications</h4>
-                            <p class="edu-card__org">Paavai Engineering College · Anna University</p>
-                            <span class="edu-card__year">2020 – 2022</span>
-                        </div>
-                        <div class="edu-card">
-                            <h4>BCA — Bachelor of Computer Applications</h4>
-                            <p class="edu-card__org">Muthayammal College of Arts &amp; Sciences · Periyar University</p>
-                            <span class="edu-card__year">2016 – 2019</span>
-                        </div>
-                    </div>
-
-                    <div class="edu-col reveal" data-reveal>
-                        <h3 class="edu-col__heading">🏆 Achievements</h3>
-                        <div class="award-card">
-                            <span class="award-card__medal">✨</span>
-                            <div>
-                                <h4>Radiometer Spotlight Award</h4>
-                                <p>For engineering contribution.</p>
-                            </div>
-                        </div>
-                        <div class="award-card">
-                            <span class="award-card__medal">🥇</span>
-                            <div>
-                                <h4>UST UStar Super Star Award</h4>
-                                <p>For project delivery and modernization.</p>
-                            </div>
-                        </div>
-                    </div>
+                <div class="bento bento--edu">
+                    <article class="tile tile--edu" data-reveal>
+                        <span class="tile__icon tint-3">🎓</span>
+                        <span class="tile__label">2020 – 2022</span>
+                        <h3 class="tile__heading">MCA — Master of Computer Applications</h3>
+                        <p class="tile__text">Paavai Engineering College · Anna University</p>
+                    </article>
+                    <article class="tile tile--edu" data-reveal>
+                        <span class="tile__icon tint-2">📘</span>
+                        <span class="tile__label">2016 – 2019</span>
+                        <h3 class="tile__heading">BCA — Bachelor of Computer Applications</h3>
+                        <p class="tile__text">Muthayammal College of Arts &amp; Sciences · Periyar University</p>
+                    </article>
+                    <article class="tile tile--award" data-reveal>
+                        <span class="tile__icon tint-4">✨</span>
+                        <span class="tile__label">Award · Radiometer</span>
+                        <h3 class="tile__heading">Radiometer Spotlight Award</h3>
+                        <p class="tile__text">For engineering contribution.</p>
+                    </article>
+                    <article class="tile tile--award" data-reveal>
+                        <span class="tile__icon tint-6">🏆</span>
+                        <span class="tile__label">Award · UST</span>
+                        <h3 class="tile__heading">UST UStar Super Star Award</h3>
+                        <p class="tile__text">For project delivery and modernization.</p>
+                    </article>
                 </div>
             </div>
         </section>
 
         <!-- ========================= CONTACT ========================= -->
-        <section class="section contact" id="contact">
+        <section class="section" id="contact">
             <div class="container">
-                <header class="section__head reveal" data-reveal>
-                    <span class="section__tag">06 — Contact</span>
-                    <h2 class="section__title">Let's Build Together</h2>
-                </header>
+                <div class="bento bento--contact">
+                    <article class="tile tile--cta" data-reveal>
+                        <span class="section__num">06 — Contact</span>
+                        <h2 class="cta__title">Let's build something<br />together.</h2>
+                        <p class="cta__lead">Have a project in mind or want to talk high-performance backends? I'm always open to new conversations.</p>
+                        <div class="cta__email">
+                            <a href="mailto:elango.p747@gmail.com" class="cta__email-link">elango.p747@gmail.com</a>
+                            <button class="btn btn--copy" id="copyEmail" data-email="elango.p747@gmail.com" aria-label="Copy email address">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <span>Copy</span>
+                            </button>
+                        </div>
+                    </article>
 
-                <div class="contact__inner reveal" data-reveal>
-                    <p class="contact__lead">
-                        Have a project in mind or want to talk high-performance backends?
-                        I'm always open to new opportunities and conversations.
-                    </p>
+                    <a href="https://linkedin.com/in/elango747" target="_blank" rel="noopener" class="tile tile--link" data-reveal>
+                        <span class="tile__icon tint-3">💼</span>
+                        <span class="tile__label">LinkedIn</span>
+                        <span class="tile__heading">in/elango747</span>
+                        <svg class="tile--link__arrow" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+                    </a>
 
-                    <div class="contact__cards">
-                        <a href="mailto:elango.p747@gmail.com" class="contact-card">
-                            <span class="contact-card__icon">✉️</span>
-                            <span class="contact-card__label">Email</span>
-                            <span class="contact-card__value">elango.p747@gmail.com</span>
-                        </a>
-                        <a href="https://linkedin.com/in/elango747" target="_blank" rel="noopener" class="contact-card">
-                            <span class="contact-card__icon">💼</span>
-                            <span class="contact-card__label">LinkedIn</span>
-                            <span class="contact-card__value">in/elango747</span>
-                        </a>
-                        <a href="tel:+916380325481" class="contact-card">
-                            <span class="contact-card__icon">📞</span>
-                            <span class="contact-card__label">Phone</span>
-                            <span class="contact-card__value">+91 63803 25481</span>
-                        </a>
-                    </div>
-
-                    <a href="mailto:elango.p747@gmail.com" class="btn btn--primary btn--lg">
-                        <span>Say Hello</span>
-                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    <a href="tel:+916380325481" class="tile tile--link" data-reveal>
+                        <span class="tile__icon tint-2">📞</span>
+                        <span class="tile__label">Phone</span>
+                        <span class="tile__heading">+91 63803 25481</span>
+                        <svg class="tile--link__arrow" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
                     </a>
                 </div>
             </div>
@@ -512,19 +521,20 @@
     <!-- ========================= FOOTER ========================= -->
     <footer class="footer">
         <div class="container footer__inner">
-            <a href="#hero" class="footer__logo">EP</a>
-            <p class="footer__copy">© <span id="year"></span> Elango Palaniyappan — Crafted with <span class="footer__heart">♥</span> &amp; code.</p>
+            <p class="footer__copy">© <span id="year"></span> Elango Palaniyappan</p>
+            <p class="footer__note">Designed &amp; built with vanilla HTML, CSS &amp; JS.</p>
             <ul class="footer__socials">
-                <li><a href="mailto:elango.p747@gmail.com" aria-label="Email">Email</a></li>
-                <li><a href="https://linkedin.com/in/elango747" target="_blank" rel="noopener" aria-label="LinkedIn">LinkedIn</a></li>
+                <li><a href="mailto:elango.p747@gmail.com">Email</a></li>
+                <li><a href="https://linkedin.com/in/elango747" target="_blank" rel="noopener">LinkedIn</a></li>
             </ul>
         </div>
     </footer>
 
-    <!-- ========================= BACK TO TOP ========================= -->
     <button class="back-to-top" id="backToTop" aria-label="Back to top">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
     </button>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <script src="./assets/js/app.js" defer></script>
 </body>

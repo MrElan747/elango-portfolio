@@ -1,294 +1,264 @@
 /* =========================================================
-   Elango Palaniyappan — Portfolio V3
-   Motorized & Animated — app.js
+   Elango Palaniyappan — Portfolio V5
+   "Bento Minimal" — app.js
    ========================================================= */
 (function () {
     'use strict';
 
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const canHover = window.matchMedia('(hover: hover)').matches;
     const $ = (sel, ctx = document) => ctx.querySelector(sel);
     const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 
-    /* ---------------- Preloader ---------------- */
-    function initPreloader() {
-        const loader = $('#preloader');
-        const fill = $('#preloaderFill');
-        const percent = $('#preloaderPercent');
-        if (!loader) return;
-
-        let p = 0;
-        const tick = setInterval(() => {
-            p += Math.random() * 18 + 6;
-            if (p >= 100) { p = 100; clearInterval(tick); }
-            if (fill) fill.style.width = p + '%';
-            if (percent) percent.textContent = Math.floor(p) + '%';
-            if (p === 100) {
-                setTimeout(() => {
-                    loader.classList.add('is-done');
-                    document.body.style.overflow = '';
-                    startReveals();
-                }, 350);
-            }
-        }, 140);
-
-        document.body.style.overflow = 'hidden';
-    }
-
-    /* ---------------- Theme Toggle ---------------- */
+    /* ---------------- Theme ---------------- */
     function initTheme() {
-        const toggle = $('#themeToggle');
         const root = document.documentElement;
-        const saved = localStorage.getItem('ep-theme');
-        if (saved) root.setAttribute('data-theme', saved);
-
+        const toggle = $('#themeToggle');
+        const meta = $('meta[name="theme-color"]');
+        const sync = () => meta && meta.setAttribute('content', root.getAttribute('data-theme') === 'dark' ? '#0b0b0c' : '#f3f2ee');
+        sync();
         toggle && toggle.addEventListener('click', () => {
             const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             root.setAttribute('data-theme', next);
-            localStorage.setItem('ep-theme', next);
+            try { localStorage.setItem('ep-bento-theme', next); } catch (e) { /* storage unavailable */ }
+            sync();
         });
     }
 
-    /* ---------------- Navbar ---------------- */
+    /* ---------------- Navbar: scrolled state, mobile menu, scrollspy, sliding pill ---------------- */
     function initNavbar() {
         const navbar = $('#navbar');
-        const hamburger = $('#navHamburger');
         const menu = $('#navMenu');
+        const hamburger = $('#navHamburger');
         const backdrop = $('#navBackdrop');
         const links = $$('.nav__link');
+        if (!menu) return;
 
-        const onScroll = () => {
-            navbar && navbar.classList.toggle('is-scrolled', window.scrollY > 40);
+        const indicator = document.createElement('span');
+        indicator.className = 'nav__indicator';
+        indicator.setAttribute('aria-hidden', 'true');
+        menu.prepend(indicator);
+
+        const moveIndicator = () => {
+            const active = $('.nav__link.is-active', menu);
+            if (!active) return;
+            indicator.style.width = active.offsetWidth + 'px';
+            indicator.style.transform = `translateX(${active.offsetLeft}px)`;
         };
-        window.addEventListener('scroll', onScroll, { passive: true });
-        onScroll();
 
-        function setMenu(open) {
-            if (!menu) return;
+        const setMenu = (open) => {
             menu.classList.toggle('is-open', open);
             hamburger && hamburger.classList.toggle('is-open', open);
-            backdrop && backdrop.classList.toggle('is-open', open);
             hamburger && hamburger.setAttribute('aria-expanded', String(open));
+            backdrop && backdrop.classList.toggle('is-open', open);
             document.body.classList.toggle('nav-open', open);
-        }
-        const closeMenu = () => setMenu(false);
-
-        hamburger && hamburger.addEventListener('click', () => {
-            setMenu(!menu.classList.contains('is-open'));
-        });
-        backdrop && backdrop.addEventListener('click', closeMenu);
-        links.forEach(link => link.addEventListener('click', closeMenu));
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
-        window.addEventListener('resize', () => { if (window.innerWidth > 880) closeMenu(); });
-
-        // Scrollspy
-        const sections = $$('main section[id]');
-        const spy = () => {
-            const y = window.scrollY + 120;
-            let current = sections[0] ? sections[0].id : '';
-            sections.forEach(s => { if (s.offsetTop <= y) current = s.id; });
-            links.forEach(l => l.classList.toggle('is-active', l.getAttribute('href') === '#' + current));
         };
-        window.addEventListener('scroll', spy, { passive: true });
-        spy();
+        hamburger && hamburger.addEventListener('click', () => setMenu(!menu.classList.contains('is-open')));
+        backdrop && backdrop.addEventListener('click', () => setMenu(false));
+        links.forEach(l => l.addEventListener('click', () => setMenu(false)));
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
+
+        const sections = $$('main section[id]');
+        let current = '';
+        const onScroll = () => {
+            navbar && navbar.classList.toggle('is-scrolled', window.scrollY > 8);
+            const y = window.scrollY + window.innerHeight * 0.3;
+            let next = sections[0] ? sections[0].id : '';
+            sections.forEach(s => { if (s.offsetTop <= y) next = s.id; });
+            // Last section can be too short to reach the threshold (tolerance covers pending reveal offsets)
+            if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 48) next = sections[sections.length - 1].id;
+            if (next !== current) {
+                current = next;
+                links.forEach(l => l.classList.toggle('is-active', l.getAttribute('href') === '#' + current));
+                moveIndicator();
+            }
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', () => { moveIndicator(); if (window.innerWidth > 900) setMenu(false); });
+        onScroll();
+        moveIndicator();
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(moveIndicator);
     }
 
-    /* ---------------- Scroll Progress ---------------- */
-    function initScrollProgress() {
+    /* ---------------- Scroll progress + back to top ---------------- */
+    function initScrollUI() {
         const bar = $('#scrollProgress');
-        if (!bar) return;
+        const btn = $('#backToTop');
+        let ticking = false;
         const update = () => {
             const h = document.documentElement.scrollHeight - window.innerHeight;
-            bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+            if (bar) bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+            if (btn) btn.classList.toggle('is-visible', window.scrollY > 600);
+            ticking = false;
         };
-        window.addEventListener('scroll', update, { passive: true });
-        update();
-    }
-
-    /* ---------------- Back To Top ---------------- */
-    function initBackToTop() {
-        const btn = $('#backToTop');
-        if (!btn) return;
         window.addEventListener('scroll', () => {
-            btn.classList.toggle('is-visible', window.scrollY > 400);
+            if (!ticking) { ticking = true; requestAnimationFrame(update); }
         }, { passive: true });
-        btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        update();
+        btn && btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: prefersReduced ? 'auto' : 'smooth' }));
     }
 
-    /* ---------------- Typing Effect ---------------- */
-    function initTyping() {
-        const el = $('#typed');
-        if (!el) return;
-        const words = ['cloud-native backends', 'ASP.NET Core APIs', 'Azure Functions', 'event-driven systems', 'Angular apps'];
-        if (prefersReduced) { el.textContent = words[0]; return; }
-
-        let wi = 0, ci = 0, deleting = false;
-        function loop() {
-            const word = words[wi];
-            el.textContent = word.slice(0, ci);
-            if (!deleting && ci < word.length) { ci++; setTimeout(loop, 80); }
-            else if (deleting && ci > 0) { ci--; setTimeout(loop, 40); }
-            else {
-                if (!deleting) { deleting = true; setTimeout(loop, 1600); }
-                else { deleting = false; wi = (wi + 1) % words.length; setTimeout(loop, 300); }
-            }
-        }
-        loop();
-    }
-
-    /* ---------------- Scroll Reveal ---------------- */
-    let revealObserver;
+    /* ---------------- Reveal with per-group stagger ---------------- */
     function initReveal() {
         const items = $$('[data-reveal]');
-        if (prefersReduced) { items.forEach(i => i.classList.add('is-visible')); return; }
-        revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry, i) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => entry.target.classList.add('is-visible'), i * 70);
-                    revealObserver.unobserve(entry.target);
-                }
+        if (prefersReduced || !('IntersectionObserver' in window)) {
+            items.forEach(i => i.classList.add('is-visible'));
+            return;
+        }
+        const obs = new IntersectionObserver((entries) => {
+            entries.filter(e => e.isIntersecting).forEach((entry, i) => {
+                entry.target.style.setProperty('--d', (i * 70) + 'ms');
+                entry.target.classList.add('is-visible');
+                obs.unobserve(entry.target);
             });
-        }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-        items.forEach(i => revealObserver.observe(i));
+        }, { threshold: 0.15, rootMargin: '0px 0px -5% 0px' });
+        items.forEach(i => obs.observe(i));
     }
-    function startReveals() {
-        // Reveal anything already in view after preloader
-        $$('[data-reveal]').forEach(el => {
-            const r = el.getBoundingClientRect();
-            if (r.top < window.innerHeight * 0.92) el.classList.add('is-visible');
-        });
+
+    /* ---------------- Rotating role word ---------------- */
+    function initRotator() {
+        const rot = $('#rotator');
+        const word = rot && $('.rotator__word', rot);
+        if (!word) return;
+        const words = ['cloud-native backends', 'ASP.NET Core APIs', 'Azure Functions', 'event-driven systems', 'Angular apps'];
+        if (prefersReduced) return;
+
+        const measurer = document.createElement('span');
+        measurer.className = 'rotator__word';
+        measurer.setAttribute('aria-hidden', 'true');
+        measurer.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;';
+        rot.appendChild(measurer);
+        const widthOf = (text) => { measurer.textContent = text; return measurer.offsetWidth; };
+
+        let i = 0;
+        const setWidth = () => { rot.style.width = widthOf(words[i]) + 'px'; };
+        setWidth();
+        window.addEventListener('resize', setWidth);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(setWidth);
+
+        setInterval(() => {
+            i = (i + 1) % words.length;
+            word.classList.add('is-out');
+            setTimeout(() => {
+                word.textContent = words[i];
+                setWidth();
+                word.classList.remove('is-out');
+                word.classList.add('is-enter');
+                // Force a frame in the "enter" position before animating in
+                requestAnimationFrame(() => requestAnimationFrame(() => word.classList.remove('is-enter')));
+            }, 320);
+        }, 2600);
     }
 
     /* ---------------- Counters ---------------- */
     function initCounters() {
         const nums = $$('[data-count]');
+        const run = (el) => {
+            const target = parseFloat(el.dataset.count);
+            const suffix = el.dataset.suffix || '';
+            if (prefersReduced) { el.textContent = target + suffix; return; }
+            const dur = 1600, t0 = performance.now();
+            const step = (now) => {
+                const t = Math.min(1, (now - t0) / dur);
+                const e = 1 - Math.pow(1 - t, 4);
+                el.textContent = Math.round(target * e) + suffix;
+                if (t < 1) requestAnimationFrame(step);
+            };
+            requestAnimationFrame(step);
+        };
+        if (!('IntersectionObserver' in window)) { nums.forEach(run); return; }
         const obs = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (!entry.isIntersecting) return;
-                const el = entry.target;
-                const target = parseFloat(el.dataset.count);
-                const suffix = el.dataset.suffix || '';
-                if (prefersReduced) { el.textContent = target + suffix; obs.unobserve(el); return; }
-                let cur = 0;
-                const step = Math.max(1, target / 40);
-                const run = () => {
-                    cur += step;
-                    if (cur >= target) { el.textContent = target + suffix; }
-                    else { el.textContent = Math.floor(cur) + suffix; requestAnimationFrame(run); }
-                };
-                run();
-                obs.unobserve(el);
+                obs.unobserve(entry.target);
+                run(entry.target);
             });
-        }, { threshold: 0.6 });
+        }, { threshold: 0.5 });
         nums.forEach(n => obs.observe(n));
     }
 
-    /* ---------------- Custom Cursor ---------------- */
-    function initCursor() {
-        const dot = $('#cursorDot');
-        const ring = $('#cursorRing');
-        if (!dot || !ring || window.matchMedia('(hover: none)').matches) return;
-
-        let mx = 0, my = 0, rx = 0, ry = 0;
-        window.addEventListener('mousemove', (e) => {
-            mx = e.clientX; my = e.clientY;
-            dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
-        });
-        const render = () => {
-            rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18;
-            ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`;
-            requestAnimationFrame(render);
+    /* ---------------- Live clock (Bangalore) ---------------- */
+    function initClock() {
+        const el = $('#clock');
+        if (!el) return;
+        let fmt;
+        try {
+            fmt = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Kolkata' });
+        } catch (e) { return; }
+        const tick = () => {
+            const [h, m] = fmt.format(new Date()).split(':');
+            el.innerHTML = `${h}<span class="clock__colon">:</span>${m}`;
         };
-        render();
-
-        const hoverables = 'a, button, .chip, .project-card, .stat-card, .contact-card, .skill-cat';
-        $$(hoverables).forEach(el => {
-            el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-            el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-        });
+        tick();
+        setInterval(tick, 15000);
     }
 
-    /* ---------------- Card Tilt + Glow ---------------- */
-    function initTilt() {
-        if (prefersReduced) return;
-        $$('[data-tilt]').forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const r = card.getBoundingClientRect();
-                const x = e.clientX - r.left, y = e.clientY - r.top;
-                const rotX = ((y / r.height) - 0.5) * -8;
-                const rotY = ((x / r.width) - 0.5) * 8;
-                card.style.transform = `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-6px)`;
-                card.style.setProperty('--mx', x + 'px');
-                card.style.setProperty('--my', y + 'px');
+    /* ---------------- Marquee: duplicate content for a seamless loop ---------------- */
+    function initMarquee() {
+        $$('.marquee__track').forEach(track => {
+            Array.from(track.children).forEach(child => {
+                const clone = child.cloneNode(true);
+                clone.setAttribute('aria-hidden', 'true');
+                track.appendChild(clone);
             });
-            card.addEventListener('mouseleave', () => { card.style.transform = ''; });
         });
     }
 
-    /* ---------------- Hero Parallax ---------------- */
-    function initParallax() {
-        if (prefersReduced) return;
-        const orb = $('.hero__orb');
-        const hero = $('.hero');
-        if (!orb || !hero) return;
-        hero.addEventListener('mousemove', (e) => {
-            const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
-            const dx = (e.clientX - cx) / cx, dy = (e.clientY - cy) / cy;
-            orb.style.transform = `translate(${dx * 18}px, ${dy * 18}px)`;
+    /* ---------------- Experience accordion ---------------- */
+    function initAccordion() {
+        $$('.exp__item').forEach(item => {
+            const head = $('.exp__head', item);
+            head && head.addEventListener('click', () => {
+                const open = !item.classList.contains('is-open');
+                item.classList.toggle('is-open', open);
+                head.setAttribute('aria-expanded', String(open));
+            });
         });
-        hero.addEventListener('mouseleave', () => { orb.style.transform = ''; });
     }
 
-    /* ---------------- Particle Background ---------------- */
-    function initParticles() {
-        const canvas = $('#bgCanvas');
-        if (!canvas || prefersReduced) return;
-        const ctx = canvas.getContext('2d');
-        let w, h, particles = [], raf;
-        const COUNT = window.innerWidth < 768 ? 36 : 70;
+    /* ---------------- Tile spotlight ---------------- */
+    function initSpotlight() {
+        if (!canHover || prefersReduced) return;
+        $$('.tile').forEach(tile => {
+            tile.addEventListener('pointermove', (e) => {
+                const r = tile.getBoundingClientRect();
+                tile.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+                tile.style.setProperty('--my', (e.clientY - r.top) + 'px');
+            });
+        });
+    }
 
-        function resize() {
-            w = canvas.width = window.innerWidth;
-            h = canvas.height = window.innerHeight;
-        }
-        function make() {
-            particles = Array.from({ length: COUNT }, () => ({
-                x: Math.random() * w, y: Math.random() * h,
-                vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4,
-                r: Math.random() * 1.8 + 0.6
-            }));
-        }
-        function draw() {
-            ctx.clearRect(0, 0, w, h);
-            const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#6c5ce7';
-            for (let i = 0; i < particles.length; i++) {
-                const p = particles[i];
-                p.x += p.vx; p.y += p.vy;
-                if (p.x < 0 || p.x > w) p.vx *= -1;
-                if (p.y < 0 || p.y > h) p.vy *= -1;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                ctx.fillStyle = accent;
-                ctx.globalAlpha = 0.5;
-                ctx.fill();
-                for (let j = i + 1; j < particles.length; j++) {
-                    const q = particles[j];
-                    const dx = p.x - q.x, dy = p.y - q.y;
-                    const dist = Math.hypot(dx, dy);
-                    if (dist < 120) {
-                        ctx.beginPath();
-                        ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y);
-                        ctx.strokeStyle = accent;
-                        ctx.globalAlpha = (1 - dist / 120) * 0.18;
-                        ctx.lineWidth = 1;
-                        ctx.stroke();
-                    }
-                }
+    /* ---------------- Copy email + toast ---------------- */
+    function initCopy() {
+        const btn = $('#copyEmail');
+        const toast = $('#toast');
+        if (!btn) return;
+        let timer;
+        const showToast = (msg) => {
+            if (!toast) return;
+            toast.textContent = msg;
+            toast.classList.add('is-visible');
+            clearTimeout(timer);
+            timer = setTimeout(() => toast.classList.remove('is-visible'), 2200);
+        };
+        btn.addEventListener('click', async () => {
+            const email = btn.dataset.email;
+            try {
+                await navigator.clipboard.writeText(email);
+            } catch (e) {
+                // Fallback for non-secure contexts
+                const ta = document.createElement('textarea');
+                ta.value = email; ta.style.position = 'fixed'; ta.style.opacity = '0';
+                document.body.appendChild(ta); ta.select();
+                try { document.execCommand('copy'); } catch (err) { /* ignore */ }
+                ta.remove();
             }
-            ctx.globalAlpha = 1;
-            raf = requestAnimationFrame(draw);
-        }
-        resize(); make(); draw();
-        window.addEventListener('resize', () => { cancelAnimationFrame(raf); resize(); make(); draw(); });
+            const label = $('span', btn);
+            btn.classList.add('is-copied');
+            if (label) label.textContent = 'Copied';
+            showToast('Email copied to clipboard ✓');
+            setTimeout(() => { btn.classList.remove('is-copied'); if (label) label.textContent = 'Copy'; }, 2000);
+        });
     }
 
     /* ---------------- Year ---------------- */
@@ -297,20 +267,22 @@
         if (y) y.textContent = new Date().getFullYear();
     }
 
-    /* ---------------- Init ---------------- */
     document.addEventListener('DOMContentLoaded', () => {
-        initPreloader();
         initTheme();
         initNavbar();
-        initScrollProgress();
-        initBackToTop();
-        initTyping();
-        initReveal();
+        initScrollUI();
+        initMarquee();
+        initRotator();
         initCounters();
-        initCursor();
-        initTilt();
-        initParallax();
-        initParticles();
+        initClock();
+        initAccordion();
+        initSpotlight();
+        initCopy();
         initYear();
+        // Let the first paint settle, then play the intro + reveals
+        requestAnimationFrame(() => {
+            document.body.classList.add('is-ready');
+            initReveal();
+        });
     });
 })();

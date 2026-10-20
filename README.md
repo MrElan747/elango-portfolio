@@ -1,20 +1,20 @@
-# Elango Palaniyappan — Portfolio V3
+# Elango Palaniyappan — Portfolio V5 "Bento Minimal"
 
-A motorized, fully animated single-page portfolio built with vanilla **HTML, CSS, and JavaScript** — no frameworks, no build step.
+A clean, bento-grid single-page portfolio built with vanilla **HTML, CSS, and JavaScript** — no frameworks, no build step.
 
 ## ✨ Features
 
-- **Animated preloader** with live progress bar
-- **Custom magnetic cursor** with trailing ring
-- **Interactive particle network** background (canvas)
-- **Typing/typewriter** role text
-- **Scroll-reveal** animations on every section
-- **Animated stat counters**
-- **3D tilt + glow** on project cards
-- **Mouse parallax** hero orb with floating tech chips
-- **Scroll progress** bar & scrollspy navigation
-- **Dark / Light** theme toggle (persists via `localStorage`)
-- **Fully responsive** + `prefers-reduced-motion` support
+- **Bento-grid layout** throughout — hero dashboard, about, skills, projects, education and contact tiles that reflow for desktop, tablet and mobile
+- **Bold typography** (Bricolage Grotesque) with a masked word-rise name intro
+- **Subtle spring micro-interactions** — physics-style easing (`linear()` spring) on reveals, hovers, buttons and the nav pill
+- **Rotating role word** with smooth width morphing
+- **Live tiles**: animated stat counters, API speed before/after bars, a live Bangalore clock and an infinite tech-stack marquee
+- **Experience accordion** with spring expand/collapse
+- **Animated architecture pipeline** on the featured project
+- **Copy-email button** with toast feedback
+- **Sliding segmented-control navigation** with scrollspy
+- **Light / Dark** theme toggle (follows system preference, persists via `localStorage`)
+- **Accessible**: skip link, focus styles, ARIA on interactive controls, and full `prefers-reduced-motion` support
 
 ## 📁 Structure
 
